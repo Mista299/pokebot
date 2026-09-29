@@ -1,5 +1,8 @@
 from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import (
+    Application, CallbackQueryHandler, CommandHandler, ContextTypes,
+)
 import os
 import httpx
 from dotenv import load_dotenv
@@ -27,6 +30,7 @@ async def poke(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     except httpx.HTTPStatusError:
         await update.message.reply_text(f"❌ No encontré '{nombre}'")
         return
+
     tipos = ", ".join(t["type"]["name"] for t in data["types"])
     texto = (
         f"🔎 *{data['name'].title()}* (#{data['id']})\n"
@@ -34,13 +38,27 @@ async def poke(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         f"Altura: {data['height']/10} m\n"
         f"Peso: {data['weight']/10} kg"
     )
-    await update.message.reply_text(texto, parse_mode="Markdown")
+    teclado = InlineKeyboardMarkup([
+        [InlineKeyboardButton("📊 Ver stats", callback_data="stats")],
+    ])
+    await update.message.reply_text(
+        texto,
+        reply_markup=teclado,
+        parse_mode="Markdown",
+    )
+
+
+async def boton_stats(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query
+    await q.answer()
+    await q.edit_message_text("📊 (Acá mostraremos los stats...)")
 
 
 def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", hola))
     app.add_handler(CommandHandler("poke", poke))
+    app.add_handler(CallbackQueryHandler(boton_stats, pattern="^stats$"))
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
