@@ -12,7 +12,7 @@ TOKEN = os.getenv("TELEGRAM_TOKEN")
 if not TOKEN:
     raise RuntimeError("Falta TELEGRAM_TOKEN en el .env")
 
-from bot.api_client import APIError, get_pokemon
+from bot.api_client import APIError, PAGE_SIZE, get_pokemon, listar_pokemones
 
 
 async def hola(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
@@ -72,11 +72,86 @@ async def botones_pokemon(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await q.edit_message_text(f"🎨 {url or 'Sin sprite'}")
 
 
+def _render_lista(data: dict) -> tuple[str, InlineKeyboardMarkup]:
+    """Arma el mensaje + teclado para una pagina de resultados."""
+    nombres = [p["name"] for p in data["results"]]
+    if data["next"]:
+        offset_actual = int(data["next"].split("offset=")[1].split("&")[0]) - PAGE_SIZE
+    else:
+        offset_actual = data["count"] - len(nombres)
+    inicio = offset_actual + 1
+    fin = offset_actual + len(nombres)
+    total = data["count"]
+
+    texto = (
+        f"📜 *Pokémons {inicio}–{fin} de {total}*\n"
+        f"_Copiá uno y usá:_ `/poke nombre`\n\n"
+    )
+    nombres_fmt = [f"`{n}`" for n in nombres]
+    filas_texto = []
+    for i in range(0, len(nombres_fmt), 2):
+        fila = nombres_fmt[i:i+2]
+        filas_texto.append("  ".join(fila))
+    texto += "\n".join(filas_texto)
+
+    botones = []
+    if data["previous"]:
+        prev_offset = max(0, offset_actual - PAGE_SIZE)
+        botones.append(InlineKeyboardButton(
+            "« Anterior", callback_data=f"lista:{prev_offset}"
+        ))
+    botones.append(InlineKeyboardButton(
+        f"{fin}/{total}", callback_data="noop"
+    ))
+    if data["next"]:
+        next_offset = offset_actual + PAGE_SIZE
+        botones.append(InlineKeyboardButton(
+            "Siguiente »", callback_data=f"lista:{next_offset}"
+        ))
+    teclado = InlineKeyboardMarkup([botones])
+    return texto, teclado
+
+
+async def pokemones(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    """Lista paginada de nombres de pokemons."""
+    offset = 0
+    if ctx.args and ctx.args[0].isdigit():
+        offset = int(ctx.args[0])
+    try:
+        data = await listar_pokemones(offset=offset)
+    except APIError as e:
+        await update.message.reply_text(f"❌ {e}")
+        return
+    texto, teclado = _render_lista(data)
+    await update.message.reply_text(texto, reply_markup=teclado, parse_mode="Markdown")
+
+
+async def callback_lista(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query
+    await q.answer()
+    if q.data == "noop":
+        return
+    if not q.data.startswith("lista:"):
+        return
+    offset = int(q.data.split(":", 1)[1])
+    try:
+        data = await listar_pokemones(offset=offset)
+    except APIError as e:
+        await q.edit_message_text(f"❌ {e}")
+        return
+    texto, teclado = _render_lista(data)
+    await q.edit_message_text(texto, reply_markup=teclado, parse_mode="Markdown")
+
+
 def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", hola))
     app.add_handler(CommandHandler("poke", poke))
-    app.add_handler(CallbackQueryHandler(botones_pokemon, pattern="^(stats|sprite)$"))
+    app.add_handler(CommandHandler("pokemones", pokemones))
+    app.add_handler(CallbackQueryHandler(
+        botones_pokemon, pattern="^(stats|sprite)$"
+    ))
+    app.add_handler(CallbackQueryHandler(callback_lista, pattern=r"^(lista:|noop)"))
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
