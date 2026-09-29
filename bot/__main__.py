@@ -27,7 +27,14 @@ async def poke(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     except httpx.HTTPStatusError:
         await update.message.reply_text(f"❌ No encontré '{nombre}'")
         return
-    await update.message.reply_text(f"Encontré: {data['name']}")
+    tipos = ", ".join(t["type"]["name"] for t in data["types"])
+    texto = (
+        f"🔎 *{data['name'].title()}* (#{data['id']})\n"
+        f"Tipo: {tipos}\n"
+        f"Altura: {data['height']/10} m\n"
+        f"Peso: {data['weight']/10} kg"
+    )
+    await update.message.reply_text(texto, parse_mode="Markdown")
 
 
 def main():
