@@ -1,0 +1,1 @@
+"""Bot de Telegram — punto de partida para la demo pedagogica."""
