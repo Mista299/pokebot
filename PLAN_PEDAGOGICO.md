@@ -18,55 +18,22 @@ No se mezcla con servicios fake.
 
 ## Índice
 
-1. [Visión general de la evolución](#visión-general-de-la-evolución)
-2. [Material previo a la clase](#material-previo-a-la-clase)
-3. [v0 — Punto de partida (Hola Mundo)](#v0--punto-de-partida-hola-mundo)
-4. [v1 — Configuración con `.env`](#v1--configuración-con-env)
-5. [v2 — Cliente HTTP con `httpx`](#v2--cliente-http-con-httpx)
-6. [v3 — Primer comando que consulta la API](#v3--primer-comando-que-consulta-la-api)
-7. [v4 — Formatear la respuesta](#v4--formatear-la-respuesta)
-8. [v5 — Inline keyboard (botones)](#v5--inline-keyboard-botones)
-9. [v6 — Botones que llaman distintos endpoints](#v6--botones-que-llaman-distintos-endpoints)
-10. [v7 — Manejo robusto de errores](#v7--manejo-robusto-de-errores)
-11. [v8 — Lista paginada (`/pokemones`)](#v8--lista-paginada-pokemones)
-12. [Cierre y preguntas frecuentes](#cierre-y-preguntas-frecuentes)
-13. [Cronograma sugerido](#cronograma-sugerido)
-
----
-
-## Visión general de la evolución
-
-Cada paso es **un único commit**, con **una sola idea nueva**. Esto
-permite mostrar `git diff` después de cada cambio y, si alguien quiere,
-revertir con `git checkout HEAD~1 -- .`.
-
-| Commit | Concepto principal | Tiempo aprox. |
-|---|---|---|
-| v0 | Hello World (lo entrega la compañera) | 0 min |
-| v1 | Variables de entorno y `.env` | 3 min |
-| v2 | Cliente HTTP asíncrono (`httpx`) | 5 min |
-| v3 | Primer comando que llama la API (`/poke`) | 5 min |
-| v4 | Formatear la respuesta con Markdown | 5 min |
-| v5 | **Inline keyboard** (botones en el mensaje) | 7 min |
-| v6 | **Callbacks que llaman la API** | 7 min |
-| v7 | Manejo de errores y excepciones HTTP | 3 min |
-| v8 | **Lista paginada** (`/pokemones`) | 5 min |
-
-**Total: ~42 minutos** (más 10 min para preguntas).
+1. [Material previo a la clase](#material-previo-a-la-clase)
+2. [v0 — Punto de partida (Hola Mundo)](#v0--punto-de-partida-hola-mundo)
+3. [v1 — Configuración con `.env`](#v1--configuración-con-env)
+4. [v2 — Cliente HTTP con `httpx`](#v2--cliente-http-con-httpx)
+5. [v3 — Primer comando que consulta la API](#v3--primer-comando-que-consulta-la-api)
+6. [v4 — Formatear la respuesta](#v4--formatear-la-respuesta)
+7. [v5 — Inline keyboard (botones)](#v5--inline-keyboard-botones)
+8. [v6 — Botones que llaman distintos endpoints](#v6--botones-que-llaman-distintos-endpoints)
+9. [v7 — Manejo robusto de errores](#v7--manejo-robusto-de-errores)
+10. [v8 — Lista paginada (`/pokemones`)](#v8--lista-paginada-pokemones)
+11. [Cierre y preguntas frecuentes](#cierre-y-preguntas-frecuentes)
+12. [Cronograma sugerido](#cronograma-sugerido)
 
 ---
 
 ## Material previo a la clase
-
-### Antes de la exposición
-
-- [ ] La compañera entrega el repo con el "hola mundo" funcionando.
-- [ ] Tú clonas el repo y verificas que arranca localmente con tu
-      propio token.
-- [ ] Creas un bot en **@BotFather** y guardas el token en tu `.env`
-      local.
-- [ ] Opcional: imprimes este `.md` o lo tienes abierto en otra
-      ventana.
 
 ### Estructura inicial esperada del repo
 
