@@ -8,9 +8,17 @@ import httpx
 BASE = os.getenv("POKEAPI_BASE", "https://pokeapi.co/api/v2")
 
 
+class APIError(Exception):
+    """Error generico al hablar con una API externa."""
+
+
 async def get_pokemon(nombre_o_id: str) -> dict:
-    """Busca un pokemon por nombre o id. Lanza HTTPStatusError si no existe."""
     async with httpx.AsyncClient(base_url=BASE, timeout=10.0) as client:
-        r = await client.get(f"/pokemon/{nombre_o_id.lower()}")
-        r.raise_for_status()
+        try:
+            r = await client.get(f"/pokemon/{nombre_o_id.lower()}")
+            r.raise_for_status()
+        except httpx.HTTPStatusError as e:
+            raise APIError(f"No encontrado: {nombre_o_id}") from e
+        except httpx.RequestError as e:
+            raise APIError("Sin conexion a la API") from e
         return r.json()

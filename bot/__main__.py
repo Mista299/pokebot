@@ -4,7 +4,6 @@ from telegram.ext import (
     Application, CallbackQueryHandler, CommandHandler, ContextTypes,
 )
 import os
-import httpx
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +12,7 @@ TOKEN = os.getenv("TELEGRAM_TOKEN")
 if not TOKEN:
     raise RuntimeError("Falta TELEGRAM_TOKEN en el .env")
 
-from bot.api_client import get_pokemon
+from bot.api_client import APIError, get_pokemon
 
 
 async def hola(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
@@ -27,8 +26,8 @@ async def poke(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     nombre = ctx.args[0]
     try:
         data = await get_pokemon(nombre)
-    except httpx.HTTPStatusError:
-        await update.message.reply_text(f"❌ No encontré '{nombre}'")
+    except APIError as e:
+        await update.message.reply_text(f"❌ {e}")
         return
 
     ctx.user_data["ultimo_pokemon"] = data
