@@ -1,22 +1,21 @@
-"""Bot de Telegram - Hola Mundo (v0).
-
-Punto de partida pedagogico. Evolucionar commit por commit siguiendo
-el plan en `plan_pedagogico_bot.md` (carpeta padre).
-"""
-from __future__ import annotations
-
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
+import os
+from dotenv import load_dotenv
 
-TOKEN_PLACEHOLDER = "PEGA_AQUI_TU_TOKEN_DE_BOTFATHER"
+load_dotenv()
+TOKEN = os.getenv("TELEGRAM_TOKEN")
+
+if not TOKEN:
+    raise RuntimeError("Falta TELEGRAM_TOKEN en el .env")
 
 
-async def hola(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+async def hola(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hola mundo 👋")
 
 
-def main() -> None:
-    app = Application.builder().token(TOKEN_PLACEHOLDER).build()
+def main():
+    app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", hola))
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
