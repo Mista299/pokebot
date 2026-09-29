@@ -16,7 +16,14 @@ from bot.api_client import APIError, PAGE_SIZE, get_pokemon, listar_pokemones
 
 
 async def hola(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Hola mundo 👋")
+    texto = (
+        "👋 *Hola! Soy PokeBot* 🐢\n\n"
+        "Comandos disponibles:\n"
+        "• `/poke <nombre>` — buscar un pokémon\n"
+        "• `/pokemones` — lista paginada de pokémons\n\n"
+        "_Tip: /pokemones para ver nombres, después /poke pikachu._"
+    )
+    await update.message.reply_text(texto, parse_mode="Markdown")
 
 
 async def poke(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
