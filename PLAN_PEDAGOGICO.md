@@ -38,6 +38,7 @@ cd pokebot
 ## Índice
 
 0. [Herramientas y librerías previas a instalar](#0-herramientas-y-librerías-previas-a-instalar) ← **empezar por acá**
+   - [0.6 Librerías de Python](#06-librerías-de-python) · [0.7 Navegar entre commits](#07-navegar-entre-commits-para-la-exposición) · [0.8 Token en @BotFather](#08-token-del-bot-en-botfather)
 1. [Material previo a la clase](#material-previo-a-la-clase)
 2. [v0 — Punto de partida (Hola Mundo)](#v0--punto-de-partida-hola-mundo)
 3. [v1 — Configuración con `.env`](#v1--configuración-con-env)
@@ -247,7 +248,71 @@ pip list | grep -E "telegram|dotenv|httpx"
 python -c "import telegram, dotenv, httpx; print('✅ deps OK')"
 ```
 
-### 0.7 Token del bot en `@BotFather`
+### 0.7 Navegar entre commits (para la exposición)
+
+Con las dependencias ya instaladas, ya podés recorrer el historial del
+repo: **cada commit es una versión del bot**. Esto es lo que permite
+mostrar en vivo cómo el bot evoluciona de "hola mundo" a un bot con
+botones inline.
+
+```bash
+# 1) Clonar el repo (si todavía no lo tenés)
+git clone https://github.com/Mista299/pokebot.git
+cd pokebot
+
+# 2) Ver todo el historial (v0 → v8)
+git log --oneline
+```
+
+Recorrer las versiones una por una con `git checkout`:
+
+```bash
+git checkout c3220c4   # v0 — hola mundo
+git checkout 9596ac7   # v1 — token en .env
+git checkout 81af8e8   # v2 — cliente HTTP
+git checkout e22a8f8   # v3 — comando /poke
+git checkout fa90d86   # v4 — formateo
+git checkout 275ec82   # v5 — inline keyboard
+git checkout 6a98ac2   # v6 — botones que llaman la API
+git checkout ae7550c   # v7 — manejo de errores
+git checkout 957886a   # v8 — lista paginada
+git checkout main      # volver a la versión final
+```
+
+Después de cada `git checkout`, el código queda **exactamente como
+estaba** en esa versión. Para probar esa versión:
+
+```bash
+python -m bot
+```
+
+Ver el **diff** de un commit concreto (sin cambiar de versión):
+
+```bash
+git show ae7550c               # commit completo
+git show ae7550c --stat        # solo los archivos cambiados
+git diff 81af8e8 e22a8f8       # comparar dos versiones
+```
+
+Comparar la versión actual con una anterior:
+
+```bash
+git diff main 957886a         # qué cambió entre v8 y el final
+```
+
+> ⚠️ **Ojo con el "detached HEAD"**: mientras estés en un commit
+> suelto, los cambios que hagas **no se guardan** en ninguna rama. Para
+> volver a trabajar sobre `main`: `git checkout main`.
+
+> 💡 **Alternativa sin `git checkout`**: crear una rama por versión
+> para poder modificarla sin perder nada.
+> ```bash
+> git checkout -b v1-dotenv  9596ac7
+> git checkout -b v2-httpx    81af8e8
+> git checkout -b v5-botones  275ec82
+> ```
+
+### 0.8 Token del bot en `@BotFather`
 
 Esto **no** es un comando: es un paso manual que debe estar hecho
 **antes** de la clase.
@@ -272,7 +337,7 @@ Esto **no** es un comando: es un paso manual que debe estar hecho
 > capturas de pantalla ni se sube al repo (`.env` está en
 > `.gitignore`). Si se filtra: `@BotFather` → `/revoke`.
 
-### 0.8 Prueba de humo (SMOKE TEST)
+### 0.9 Prueba de humo (SMOKE TEST)
 
 Este bloque **debe correr completo sin errores** antes de la
 exposición. Pégalo en la terminal con el venv activado:
@@ -312,7 +377,7 @@ python -m bot
 Si los 4 puntos pasan, la clase va a fluir. Si alguno falla, se
 resuelve **antes** de exponer.
 
-### 0.9 Errores frecuentes (con su solución)
+### 0.10 Errores frecuentes (con su solución)
 
 | Error en terminal | Causa | Solución |
 |---|---|---|
@@ -320,13 +385,13 @@ resuelve **antes** de exponer.
 | `No module named 'venv'` | Falta el módulo venv | `sudo apt install python3-venv` |
 | `pip install` → *Permission denied* | venv **no** activado | `source .venv/bin/activate` y reintentar |
 | `ModuleNotFoundError: No module named 'telegram'` | Deps no instaladas o venv no activado | `pip install -r requirements.txt` con el venv activo |
-| `RuntimeError: Falta TELEGRAM_TOKEN en el .env` | `.env` sin el token real | Repetir 0.7 |
+| `RuntimeError: Falta TELEGRAM_TOKEN en el .env` | `.env` sin el token real | Repetir 0.8 |
 | `Invalid token` | Token mal copiado (espacios/quotes) | Volver a copiarlo desde @BotFather |
 | `No such file or directory: '.env'` | Estás en otra carpeta | `cd pokebot` |
 | `ConnectionError` / `Timeout` al pedir datos | Sin internet o PokeAPI caída | Revisar red; el bot ya maneja ese error (v7) |
 | `curl: command not found` | curl no instalado | `sudo apt install curl` |
 
-### 0.10 Plan B (si algo falla en vivo)
+### 0.11 Plan B (si algo falla en vivo)
 
 Si en la clase el entorno se rompe, hay que tener a mano:
 
