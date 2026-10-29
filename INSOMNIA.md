@@ -11,6 +11,25 @@ el bot de Telegram. Cada request corresponde a una llamada real de
 3. Se crea el workspace **PokeBot** con 3 carpetas y 10 requests
 4. Activá el entorno **PokeAPI** (arriba a la derecha)
 
+> **Si te dice "No importers found for file"**: estás usando un archivo
+> con la estructura vieja (`collection` anidado). El formato v4 de
+> Insomnia espera un array plano `resources` donde cada elemento lleva
+> su `_type` (`workspace`, `request_group`, `environment`, `request`).
+> Este archivo ya usa ese formato.
+
+### Estructura del archivo
+
+```
+PokeBot-PokeAPI.insomnia.json
+├── __export_format: 4
+└── resources: [ ... ]          ← array PLANO, cada uno con su _type
+    ├── _type: workspace        → el workspace "PokeBot"
+    ├── _type: environment       → el entorno "PokeAPI"
+    ├── _type: request_group     → las 3 carpetas
+    └── _type: request           → los 10 requests
+```
+
+
 ## El entorno
 
 | Variable | Valor | Para qué |

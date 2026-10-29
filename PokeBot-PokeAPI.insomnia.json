@@ -1,644 +1,593 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_source": "insomnia.desktop.app:v2023.5.8",
-  "_id": "f_pokebot_pokeapi",
-  "parentId": null,
-  "modified": 1767225600000,
-  "created": 1767225600000,
-  "name": "PokeBot - PokeAPI",
-  "description": "Endpoints de PokeAPI que consume el bot de Telegram (proyecto PokeBot).\n\nEquivale a lo que hace bot/api_client.py:\n- get_pokemon()      -> GET /pokemon/{nombre_o_id}\n- listar_pokemones() -> GET /pokemon?offset=&limit=\n\nTodos son GET, no requieren API key ni autenticacion.",
-  "scope": null,
-  "environment": {
-    "_id": "env_pokebot_pokeapi",
-    "parentId": "f_pokebot_pokeapi",
-    "modified": 1767225600000,
-    "created": 1767225600000,
-    "name": "PokeAPI",
-    "data": {
-      "base_url": "https://pokeapi.co/api/v2",
-      "page_size": "20",
-      "total_pokemon": "1351"
+  "__export_date": "2026-10-29T15:00:00.000Z",
+  "__export_source": "pokebot-insomnia-collection",
+  "resources": [
+    {
+      "_type": "workspace",
+      "_id": "wr_pokebot",
+      "parentId": null,
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "PokeBot",
+      "description": "Endpoints de PokeAPI que consume el bot de Telegram.\nEquivale a bot/api_client.py: get_pokemon() y listar_pokemones().",
+      "scope": null,
+      "environment": {},
+      "activeEnvironmentId": "env_pokebot",
+      "logins": [],
+      "body": {},
+      "onRequest": {},
+      "onResponse": {}
     },
-    "dataOwnership": "object",
-    "meta": {}
-  },
-  "collection": {
-    "_id": "col_pokebot",
-    "parentId": "f_pokebot_pokeapi",
-    "modified": 1767225600000,
-    "created": 1767225600000,
-    "name": "PokeBot",
-    "description": "Los endpoints que el bot llama realmente.",
-    "environment": {},
-    "folders": [
-      {
-        "_id": "fld_individual",
-        "parentId": "col_pokebot",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "name": "1. Pokemon individual  (get_pokemon)",
-        "description": "GET /pokemon/{nombre_o_id}  --  lo usa el comando /poke",
-        "environment": {},
-        "folders": []
+    {
+      "_type": "environment",
+      "_id": "env_pokebot",
+      "parentId": "wr_pokebot",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "PokeAPI",
+      "description": "Variables del entorno. Cambiar page_size cambia el limit de todos los requests.",
+      "data": {
+        "base_url": "https://pokeapi.co/api/v2",
+        "page_size": "20",
+        "total_pokemon": "1351"
       },
-      {
-        "_id": "fld_paginacion",
-        "parentId": "col_pokebot",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "name": "2. Lista paginada  (listar_pokemones)",
-        "description": "GET /pokemon?offset=&limit=  --  lo usa el comando /pokemones",
-        "environment": {},
-        "folders": []
+      "dataOwnership": "object",
+      "meta": {}
+    },
+    {
+      "_type": "request_group",
+      "_id": "grp_individual",
+      "parentId": "wr_pokebot",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "1. Pokemon individual  (get_pokemon)",
+      "description": "GET /pokemon/{nombre_o_id}  --  lo usa el comando /poke",
+      "environment": {},
+      "metaSortKey": -1400000000000
+    },
+    {
+      "_type": "request_group",
+      "_id": "grp_paginacion",
+      "parentId": "wr_pokebot",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "2. Lista paginada  (listar_pokemones)",
+      "description": "GET /pokemon?offset=&limit=  --  lo usa el comando /pokemones",
+      "environment": {},
+      "metaSortKey": -1400000000000
+    },
+    {
+      "_type": "request_group",
+      "_id": "grp_errores",
+      "parentId": "wr_pokebot",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "3. Casos de error  (APIError)",
+      "description": "Los errores que el bot convierte en mensajes legibles con try/except",
+      "environment": {},
+      "metaSortKey": -1400000000000
+    },
+    {
+      "_type": "request",
+      "_id": "req_poke_nombre",
+      "parentId": "grp_individual",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "Buscar por nombre  ( /poke pikachu )",
+      "description": "GET /pokemon/{nombre}\n\nEs lo que hace get_pokemon() en bot/api_client.py.\nEl bot llama .lower() sobre el nombre, asi que /pokemon/Pikachu\ntambien funciona (PokeAPI no distingue mayusculas).\n\nLo que usa el bot del JSON:\n  data['name']     -> el nombre\n  data['id']       -> el numero\n  data['types']    -> los tipos (electric, ...)\n  data['height']   -> altura en decimetros (/10 = metros)\n  data['weight']   -> peso en hectogramos (/10 = kg)\n  data['stats']    -> las 6 stats base (boton 'Ver stats')\n  data['sprites']  -> URLs de imagenes (boton 'Ver sprite')",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon/pikachu",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
+        ],
+        "path": [
+          "api",
+          "v2",
+          "pokemon",
+          "pikachu"
+        ],
+        "query": [],
+        "variable": []
       },
-      {
-        "_id": "fld_errores",
-        "parentId": "col_pokebot",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "name": "3. Casos de error  (APIError)",
-        "description": "Los errores que el bot convierte en mensajes legibles con try/except",
-        "environment": {},
-        "folders": []
-      }
-    ],
-    "requests": [
-      {
-        "_id": "req_poke_nombre",
-        "parentId": "fld_individual",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon/pikachu",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon",
-            "pikachu"
-          ],
-          "query": [],
-          "variable": []
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
         },
-        "name": "Buscar por nombre  ( /poke pikachu )",
-        "description": "GET /pokemon/{nombre}\n\nEs lo que hace get_pokemon() en bot/api_client.py.\nEl bot llama .lower() sobre el nombre, asi que /pokemon/Pikachu tambien funciona (PokeAPI no distingue mayusculas).\n\nLo que usa el bot del JSON:\n  data['name']       -> el nombre\n  data['id']         -> el numero\n  data['types']      -> los tipos (electric, ...)\n  data['height']     -> altura en decimetros (/10 = metros)\n  data['weight']     -> peso en hectogramos (/10 = kg)\n  data['stats']      -> las 6 stats base (boton 'Ver stats')\n  data['sprites']    -> URLs de imagenes (boton 'Ver sprite')",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    },
+    {
+      "_type": "request",
+      "_id": "req_poke_id",
+      "parentId": "grp_individual",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "Buscar por id  ( /poke 25 )",
+      "description": "GET /pokemon/{id}\n\nEl mismo endpoint acepta el numero interno de la pokedex.\n25 = pikachu.\n\nEn el bot, get_pokemon() no distingue: el mismo f-string\n/pokemon/{nombre_o_id.lower()} sirve para los dos casos.",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon/25",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
+        ],
+        "path": [
+          "api",
+          "v2",
+          "pokemon",
+          "25"
+        ],
+        "query": [],
+        "variable": []
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
         },
-        "parameters": [],
-        "headers": [
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    },
+    {
+      "_type": "request",
+      "_id": "req_poke_compuesto",
+      "parentId": "grp_individual",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "Nombre compuesto  ( meowstic-female-mega )",
+      "description": "GET /pokemon/{nombre} con un nombre compuesto.\n\nSirve para probar que los nombres con guion y el formato de\nmega-evolucion tambien funcionan.",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon/meowstic-female-mega",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
+        ],
+        "path": [
+          "api",
+          "v2",
+          "pokemon",
+          "meowstic-female-mega"
+        ],
+        "query": [],
+        "variable": []
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    },
+    {
+      "_type": "request",
+      "_id": "req_lista_primera",
+      "parentId": "grp_paginacion",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "Primera pagina  ( /pokemones )",
+      "description": "GET /pokemon?offset=0&limit=20\n\nEs lo que hace listar_pokemones() cuando el usuario escribe\n/pokemones sin argumentos (offset = 0).\n\nRespuesta esperada:\n  count    -> 1351 (total de pokemons)\n  next     -> URL de la pagina siguiente, o null en la ultima\n  previous -> URL de la pagina anterior, o null en la primera\n  results  -> [{name, url}, ...] con 20 elementos\n\nEl bot usa count y results para el texto, y next/previous\npara decidir si mostrar los botones 'Anterior' y 'Siguiente'.",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
+        ],
+        "path": [
+          "api",
+          "v2",
+          "pokemon"
+        ],
+        "query": [
           {
-            "name": "Accept",
-            "value": "application/json"
+            "key": "offset",
+            "value": "0",
+            "description": "Desde el inicio. offset=0 = primera pagina.",
+            "disabled": false
           },
           {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
+            "key": "limit",
+            "value": "{{page_size}}",
+            "description": "Cuantos items trae por pagina. El bot usa 20.",
+            "disabled": false
           }
         ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
+        "variable": []
       },
-      {
-        "_id": "req_poke_id",
-        "parentId": "fld_individual",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon/25",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon",
-            "25"
-          ],
-          "query": [],
-          "variable": []
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
         },
-        "name": "Buscar por id  ( /poke 25 )",
-        "description": "GET /pokemon/{id}\n\nEl mismo endpoint acepta el numero interno de la pokedex.\n25 = pikachu.\n\nEn el bot, get_pokemon() no distingue: el mismo f-string /pokemon/{nombre_o_id.lower()} sirve para los dos casos.",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
-        },
-        "parameters": [],
-        "headers": [
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    },
+    {
+      "_type": "request",
+      "_id": "req_lista_offset",
+      "parentId": "grp_paginacion",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "Pagina del medio  ( /pokemones 40 )",
+      "description": "GET /pokemon?offset=40&limit=20\n\nEl bot permite saltar a una pagina: /pokemones 40.\n\nOjo con esto: next y previous traen el offset ya calculado:\n  next     -> ...?offset=60&limit=20\n  previous -> ...?offset=20&limit=20\n\nEl bot NO usa esos numeros directo: parsea la URL con\ndata['next'].split('offset=')[1].split('&')[0] para sacar el offset.",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
+        ],
+        "path": [
+          "api",
+          "v2",
+          "pokemon"
+        ],
+        "query": [
           {
-            "name": "Accept",
-            "value": "application/json"
+            "key": "offset",
+            "value": "40",
+            "description": "Saltar 40 pokemons. Es la pagina que muestra /pokemones 40",
+            "disabled": false
           },
           {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
+            "key": "limit",
+            "value": "{{page_size}}",
+            "description": "20 items por pagina",
+            "disabled": false
           }
         ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
+        "variable": []
       },
-      {
-        "_id": "req_poke_ultimo",
-        "parentId": "fld_individual",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon/meowstic-female-mega",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon",
-            "meowstic-female-mega"
-          ],
-          "query": [],
-          "variable": []
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
         },
-        "name": "Ultimo de la lista  ( /poke meowstic-female-mega )",
-        "description": "GET /pokemon/{nombre} con un nombre compuesto.\n\nSirve para probar que los nombres con guion y formato de mega-evolucion tambien funcionan.",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
-        },
-        "parameters": [],
-        "headers": [
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    },
+    {
+      "_type": "request",
+      "_id": "req_lista_ultima",
+      "parentId": "grp_paginacion",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "Ultima pagina  ( /pokemones 1340 )",
+      "description": "GET /pokemon?offset=1340&limit=20\n\nLa ultima pagina: hay 1351 pokemons, 1340 + 20 = 1360,\nentonces solo devuelven 11.\n\nClaves: next = null (no hay 'Siguiente'), previous con offset=1320.\nEl bot detecta esto con: if data['next'] / if data['previous'].\n\nEl bot calcula el offset actual asi:\n  offset_actual = data['count'] - len(nombres) = 1351 - 11 = 1340",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
+        ],
+        "path": [
+          "api",
+          "v2",
+          "pokemon"
+        ],
+        "query": [
           {
-            "name": "Accept",
-            "value": "application/json"
+            "key": "offset",
+            "value": "1340",
+            "description": "Ultima pagina. Devuelve 11 resultados, no 20.",
+            "disabled": false
           },
           {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
+            "key": "limit",
+            "value": "{{page_size}}",
+            "description": "20 items por pagina",
+            "disabled": false
           }
         ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
+        "variable": []
       },
-      {
-        "_id": "req_lista_primera",
-        "parentId": "fld_paginacion",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon"
-          ],
-          "query": [
-            {
-              "key": "offset",
-              "value": "0",
-              "description": "Desde el inicio. offset=0 = primera pagina.",
-              "disabled": false
-            },
-            {
-              "key": "limit",
-              "value": "{{page_size}}",
-              "description": "Cuantos items trae por pagina. El bot usa 20.",
-              "disabled": false
-            }
-          ],
-          "variable": []
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
         },
-        "name": "Primera pagina  ( /pokemones )",
-        "description": "GET /pokemon?offset=0&limit=20\n\nEs lo que hace listar_pokemones() cuando el usuario escribe /pokemones sin argumentos (offset = 0).\n\nRespuesta esperada:\n  count    -> 1351 (total de pokemons)\n  next     -> URL de la pagina siguiente, o null en la ultima\n  previous -> URL de la pagina anterior, o null en la primera\n  results  -> [{name, url}, ...] con 20 elementos\n\nEl bot usa count y results para el texto, y next/previous para decidir si mostrar los botones 'Anterior' y 'Siguiente'.",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
-        },
-        "parameters": [],
-        "headers": [
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    },
+    {
+      "_type": "request",
+      "_id": "req_lista_limite",
+      "parentId": "grp_paginacion",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "Limite grande  (ver los 1351 de una vez)",
+      "description": "GET /pokemon?offset=0&limit=1000\n\nSirve para ver de una vez toda la coleccion.\n\nOjo: limit tambien tiene un tope del lado de la API.\nProbá limit=2000 y fijate que devuelve los mismos 1351.",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
+        ],
+        "path": [
+          "api",
+          "v2",
+          "pokemon"
+        ],
+        "query": [
           {
-            "name": "Accept",
-            "value": "application/json"
+            "key": "offset",
+            "value": "0",
+            "description": "Desde el inicio",
+            "disabled": false
           },
           {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
+            "key": "limit",
+            "value": "1000",
+            "description": "Traer muchos de una. Hay un maximo en la API.",
+            "disabled": false
           }
         ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
+        "variable": []
       },
-      {
-        "_id": "req_lista_offset",
-        "parentId": "fld_paginacion",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon"
-          ],
-          "query": [
-            {
-              "key": "offset",
-              "value": "40",
-              "description": "Saltar 40 pokemons. Es la pagina que muestra /pokemones 40",
-              "disabled": false
-            },
-            {
-              "key": "limit",
-              "value": "{{page_size}}",
-              "description": "20 items por pagina",
-              "disabled": false
-            }
-          ],
-          "variable": []
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
         },
-        "name": "Pagina del medio  ( /pokemones 40 )",
-        "description": "GET /pokemon?offset=40&limit=20\n\nEl bot permite saltar a una pagina: /pokemones 40.\n\nOjo con esto: next y previous traen el offset ya calculado:\n  next     -> ...?offset=60&limit=20\n  previous -> ...?offset=20&limit=20\n\nEl bot NO usa esos numeros directo: parsea la URL con data['next'].split('offset=')[1].split('&')[0] para sacar el offset.",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    },
+    {
+      "_type": "request",
+      "_id": "req_err_noexiste",
+      "parentId": "grp_errores",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "No existe  ( /poke noexiste )",
+      "description": "GET /pokemon/noexiste -> HTTP 404\n\nEste es el error que el bot maneja con try/except:\n\n  except httpx.HTTPStatusError as e:\n      raise APIError(f\"Error HTTP {r.status_code}\") from e\n\nY despues el handler responde:\n  except APIError as e:\n      await update.message.reply_text(f\"No encontrado: {nombre}\")\n\nOJO: la API responde 404, pero el bot NUNCA ve el 404 crudo.\nraise_for_status() lo convierte en HTTPStatusError, y el api_client\nlo traduce a APIError con un mensaje legible.",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon/noexiste",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
+        ],
+        "path": [
+          "api",
+          "v2",
+          "pokemon",
+          "noexiste"
+        ],
+        "query": [],
+        "variable": []
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
         },
-        "parameters": [],
-        "headers": [
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    },
+    {
+      "_type": "request",
+      "_id": "req_err_offset_fuera",
+      "parentId": "grp_errores",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "Offset fuera de rango",
+      "description": "GET /pokemon?offset=9999&limit=20\n\nDevuelve HTTP 200 pero con results vacio:\n  {count: 1351, next: null, previous: ..., results: []}\n\nTrampa: NO es un error. El bot tiene que manejar este caso\nsin romperse, porque _render_lista haria:\n  offset_actual = data['count'] - len(nombres) = 1351 - 0 = 1351\n  inicio = 1352, fin = 1351\nO sea, muestra 'Pokemons 1352-1351 de 1351'. Un rango raro,\npero no crashea.",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
+        ],
+        "path": [
+          "api",
+          "v2",
+          "pokemon"
+        ],
+        "query": [
           {
-            "name": "Accept",
-            "value": "application/json"
+            "key": "offset",
+            "value": "9999",
+            "description": "Mas alla del total. Devuelve results vacio.",
+            "disabled": false
           },
           {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
+            "key": "limit",
+            "value": "{{page_size}}",
+            "description": "20 items por pagina",
+            "disabled": false
           }
         ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
+        "variable": []
       },
-      {
-        "_id": "req_lista_ultima",
-        "parentId": "fld_paginacion",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon"
-          ],
-          "query": [
-            {
-              "key": "offset",
-              "value": "1340",
-              "description": "Ultima pagina. Devuelve 11 resultados, no 20.",
-              "disabled": false
-            },
-            {
-              "key": "limit",
-              "value": "{{page_size}}",
-              "description": "20 items por pagina",
-              "disabled": false
-            }
-          ],
-          "variable": []
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
         },
-        "name": "Ultima pagina  ( /pokemones 1340 )",
-        "description": "GET /pokemon?offset=1340&limit=20\n\nLa ultima pagina: hay 1351 pokemons, 1340 + 20 = 1360, entonces solo devuelven 11.\n\nClaves: next = null (no hay 'Siguiente'), previous con offset=1320.\nEl bot detecta esto con: if data['next'] / if data['previous'].\n\nEl bot calcula el offset actual asi:\n  offset_actual = data['count'] - len(nombres) = 1351 - 11 = 1340",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
-        },
-        "parameters": [],
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json"
-          },
-          {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
-          }
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    },
+    {
+      "_type": "request",
+      "_id": "req_err_base_mala",
+      "parentId": "grp_errores",
+      "modified": 1767225600000,
+      "created": 1767225600000,
+      "name": "Base URL incorrecta  (simula API caida)",
+      "description": "Prueba de conexion fallida.\n\nPara simularlo: edita la URL y poné un host que no exista,\npor ejemplo https://pokeapi.invalid/api/v2/pokemon/pikachu.\n\nEso produce httpx.RequestError, NO HTTPStatusError, y el bot\nlo maneja por la otra rama:\n\n  except httpx.RequestError as e:\n      raise APIError('Sin conexion a la API') from e\n\nOjo con la diferencia:\n  HTTPStatusError -> la API respondio (404, 500, ...)\n  RequestError    -> la API no respondio (timeout, sin DNS, sin red)",
+      "method": "GET",
+      "url": {
+        "raw": "/api/v2/pokemon/pikachu",
+        "protocol": "https",
+        "host": [
+          "pokeapi",
+          "co"
         ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
+        "path": [
+          "api",
+          "v2",
+          "pokemon",
+          "pikachu"
+        ],
+        "query": [],
+        "variable": []
       },
-      {
-        "_id": "req_lista_limite",
-        "parentId": "fld_paginacion",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon"
-          ],
-          "query": [
-            {
-              "key": "offset",
-              "value": "0",
-              "description": "Desde el inicio",
-              "disabled": false
-            },
-            {
-              "key": "limit",
-              "value": "1000",
-              "description": "Traer muchos de una. Hay un maximo en la API.",
-              "disabled": false
-            }
-          ],
-          "variable": []
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
         },
-        "name": "Limite grande  (ver los 1351 de una vez)",
-        "description": "GET /pokemon?offset=0&limit=1000\n\nSirve para ver de una vez toda la coleccion.\n\nOjo: limit tambien tiene un tope del lado de la API. Probá limit=2000 y fijate que devuelve los mismos 1351.",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
-        },
-        "parameters": [],
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json"
-          },
-          {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
-          }
-        ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
-      },
-      {
-        "_id": "req_err_noexiste",
-        "parentId": "fld_errores",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon/noexiste",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon",
-            "noexiste"
-          ],
-          "query": [],
-          "variable": []
-        },
-        "name": "No existe  ( /poke noexiste )",
-        "description": "GET /pokemon/noexiste -> HTTP 404\n\nEste es el error que el bot maneja con try/except:\n\n  except httpx.HTTPStatusError as e:\n      raise APIError(f\"Error HTTP {r.status_code}\") from e\n\nY despues el handler responde:\n  except APIError as e:\n      await update.message.reply_text(f\"No encontrado: {nombre}\")\n\nOJO: la API responde 404, pero el bot NUNCA ve el 404 crudo. raise_for_status() lo convierte en HTTPStatusError, y el api_client lo traduce a APIError con un mensaje legible.",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
-        },
-        "parameters": [],
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json"
-          },
-          {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
-          }
-        ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
-      },
-      {
-        "_id": "req_err_offset_fuera",
-        "parentId": "fld_errores",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon"
-          ],
-          "query": [
-            {
-              "key": "offset",
-              "value": "9999",
-              "description": "Mas alla del total. Devuelve results vacio.",
-              "disabled": false
-            },
-            {
-              "key": "limit",
-              "value": "{{page_size}}",
-              "description": "20 items por pagina",
-              "disabled": false
-            }
-          ],
-          "variable": []
-        },
-        "name": "Offset fuera de rango",
-        "description": "GET /pokemon?offset=9999&limit=20\n\nDevuelve HTTP 200 pero con results vacio:\n  {count: 1351, next: null, previous: ..., results: []}\n\nTrampa: NO es un error. El bot tiene que manejar este caso sin romperse, porque _render_lista haria:\n  offset_actual = data['count'] - len(nombres) = 1351 - 0 = 1351\n  inicio = 1352, fin = 1351\nO sea, muestra 'Pokemons 1352-1351 de 1351'. Un rango raro, pero no crashea.",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
-        },
-        "parameters": [],
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json"
-          },
-          {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
-          }
-        ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
-      },
-      {
-        "_id": "req_err_base_mala",
-        "parentId": "fld_errores",
-        "modified": 1767225600000,
-        "created": 1767225600000,
-        "url": {
-          "raw": "/api/v2/pokemon/pikachu",
-          "protocol": "https",
-          "host": [
-            "pokeapi",
-            "co"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "pokemon",
-            "pikachu"
-          ],
-          "query": [],
-          "variable": []
-        },
-        "name": "Base URL incorrecta  (simula API caida)",
-        "description": "Prueba de conexion fallida.\n\nPara simularlo: edita la URL y poné un host que no exista, por ejemplo https://pokeapi.invalid/api/v2/pokemon/pikachu.\n\nEso produce httpx.RequestError, NO HTTPStatusError, y el bot lo maneja por la otra rama:\n\n  except httpx.RequestError as e:\n      raise APIError('Sin conexion a la API') from e\n\nOjo con la diferencia:\n  HTTPStatusError -> la API respondio (404, 500, ...)\n  RequestError    -> la API no respondio (timeout, sin DNS, sin red)",
-        "method": "GET",
-        "body": {
-          "mimeType": "application/json",
-          "text": ""
-        },
-        "parameters": [],
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json"
-          },
-          {
-            "name": "User-Agent",
-            "value": "pokebot-demo/1.0"
-          }
-        ],
-        "authentication": {},
-        "metaSortKey": -1500000000000,
-        "isPrivate": false,
-        "settingStoreCookies": true,
-        "settingSendCookies": true,
-        "settingDisableRenderResponse": false,
-        "settingEncodeUrl": true,
-        "settingRebuildPath": true,
-        "settingFollowRedirects": false,
-        "color": null
-      }
-    ]
-  },
-  "workspace": {
-    "_id": "ws_pokebot",
-    "parentId": null,
-    "modified": 1767225600000,
-    "created": 1767225600000,
-    "name": "PokeBot",
-    "description": "",
-    "scope": null,
-    "environment": {},
-    "activeEnvironmentId": null,
-    "logins": [],
-    "body": {},
-    "onRequest": {},
-    "onResponse": {}
-  }
+        {
+          "name": "User-Agent",
+          "value": "pokebot-demo/1.0"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderResponse": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": false
+    }
+  ]
 }
