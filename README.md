@@ -5,6 +5,15 @@ Bot de Telegram usado como ejemplo en la exposición. Empieza como un
 convertirse en un bot que **consulta la PokeAPI** (búsqueda individual
 y lista paginada) usando botones inline.
 
+🔗 **Repositorio (público): https://github.com/Mista299/pokebot**
+
+```bash
+git clone https://github.com/Mista299/pokebot.git
+cd pokebot
+```
+
+📖 **Guía completa de la exposición:** [`PLAN_PEDAGOGICO.md`](PLAN_PEDAGOGICO.md)
+
 ## Arranque rápido (paso a paso)
 
 ### 1. Crear el bot en Telegram
@@ -129,8 +138,8 @@ pokebot/
 
 ## Evolución pedagógica (commits)
 
-El plan completo está en **`../plan_pedagogico_bot.md`** (carpeta
-padre `exposicion/`). Cada commit agrega un único cambio:
+El plan completo está en **[`PLAN_PEDAGOGICO.md`](PLAN_PEDAGOGICO.md)**
+(en la raíz del repo). Cada commit agrega un único cambio:
 
 | Commit | Concepto |
 |---|---|

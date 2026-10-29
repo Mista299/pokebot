@@ -14,10 +14,30 @@ Toda la demo usa **una sola API** ([PokeAPI](https://pokeapi.co)) para
 mantener coherencia: misma URL base, mismo cliente HTTP, mismo flujo.
 No se mezcla con servicios fake.
 
+## 📦 Repositorio de la guía
+
+🔗 **https://github.com/Mista299/pokebot** (repositorio **público**)
+
+Este documento, el código del bot y el historial completo de commits
+(v0 → v8) están en ese repositorio. **Cualquiera puede clonarlo y
+seguir la misma guía paso a paso**, sin pedirle nada a nadie.
+
+```bash
+git clone https://github.com/Mista299/pokebot.git
+cd pokebot
+```
+
+> Si preferís **no clonar** y solo leer, los archivos también están
+> disponibles en la web:
+> - Plan pedagógico → https://github.com/Mista299/pokebot/blob/main/PLAN_PEDAGOGICO.md
+> - README (guía rápida) → https://github.com/Mista299/pokebot/blob/main/README.md
+> - Historial de commits → https://github.com/Mista299/pokebot/commits/main
+
 ---
 
 ## Índice
 
+0. [Herramientas y librerías previas a instalar](#0-herramientas-y-librerías-previas-a-instalar) ← **empezar por acá**
 1. [Material previo a la clase](#material-previo-a-la-clase)
 2. [v0 — Punto de partida (Hola Mundo)](#v0--punto-de-partida-hola-mundo)
 3. [v1 — Configuración con `.env`](#v1--configuración-con-env)
@@ -30,6 +50,294 @@ No se mezcla con servicios fake.
 10. [v8 — Lista paginada (`/pokemones`)](#v8--lista-paginada-pokemones)
 11. [Cierre y preguntas frecuentes](#cierre-y-preguntas-frecuentes)
 12. [Cronograma sugerido](#cronograma-sugerido)
+
+---
+
+## Cómo seguir esta guía (para quienes no están en clase)
+
+Esta guía está diseñada para **reproducir la exposición en casa**, sin
+tener que estar en el aula. El repositorio público contiene **un commit
+por cada versión (v0 → v8)**, así que podés recorrer la historia
+exactamente igual que se mostró en vivo.
+
+### Opción A — Clonar y saltar entre versiones (recomendada)
+
+```bash
+git clone https://github.com/Mista299/pokebot.git
+cd pokebot
+
+# Instalar dependencias (una sola vez)
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+# Ver el historial completo
+git log --oneline
+```
+
+Ahora a recorrer los commits. Cada `git checkout` te deja el código
+**exactamente como estaba** en esa versión:
+
+```bash
+git checkout c3220c4   # v0 — hola mundo
+git checkout 9596ac7   # v1 — token en .env
+git checkout 81af8e8   # v2 — cliente HTTP
+git checkout e22a8f8   # v3 — comando /poke
+git checkout fa90d86   # v4 — formateo
+git checkout 275ec82   # v5 — inline keyboard
+git checkout 6a98ac2   # v6 — botones que llaman la API
+git checkout ae7550c   # v7 — manejo de errores
+git checkout 957886a   # v8 — lista paginada
+git checkout main      # volver a la versión final
+```
+
+> ⚠️ Mientras estés en "detached HEAD" los cambios **no** se guardan
+> en ninguna rama. Para volver a trabajar sobre `main`:
+> `git checkout main`.
+
+### Opción B — Una rama por versión (para Trashear)
+
+Si querés **modificar** el código en cada versión sin perder nada:
+
+```bash
+git checkout -b v1-dotenv  9596ac7
+git checkout -b v2-httpx    81af8e8
+git checkout -b v5-botones  275ec82
+```
+
+### Opción C — Solo leer (sin instalar nada)
+
+- Plan completo → https://github.com/Mista299/pokebot/blob/main/PLAN_PEDAGOGICO.md
+- Guía rápida → https://github.com/Mista299/pokebot/blob/main/README.md
+- Diff de cada commit → https://github.com/Mista299/pokebot/commits/main
+
+### Tabla de versiones
+
+| Versión | Commit | Concepto que se aprende |
+|---|---|---|
+| v0 | `c3220c4` | Hola mundo: `Application` + `CommandHandler` |
+| v1 | `9596ac7` | Secretos en `.env` (nunca hardcodear el token) |
+| v2 | `81af8e8` | Cliente HTTP asíncrono con `httpx` |
+| v3 | `e22a8f8` | Primer comando que consulta la API |
+| v4 | `fa90d86` | Formatear la respuesta (Markdown + emojis) |
+| v5 | `275ec82` | ⭐ Inline keyboard (botones) |
+| v6 | `6a98ac2` | ⭐⭐ Botones que llaman distintos endpoints |
+| v7 | `ae7550c` | Manejo robusto de errores |
+| v8 | `957886a` | ⭐⭐⭐ Lista paginada (`/pokemones`) |
+
+---
+
+## 0. Herramientas y librerías previas a instalar
+
+> ⚠️ **Esto es lo PRIMERO que hay que tener listo antes de empezar la
+> exposición.** Si el entorno no está preparado, se pierden 15–20
+> minutos en troubleshooting. Dejalo **verificado el día antes**.
+
+### 0.1 Checklist rápido (resumen)
+
+| # | Herramienta / librería | Para qué la usamos | Comando |
+|---|---|---|---|
+| 1 | **Python 3.10+** | Lenguaje del bot | `python3 --version` |
+| 2 | **pip** | Instalador de paquetes | `pip3 --version` |
+| 3 | **venv** (módulo) | Entorno virtual aislado | `sudo apt install python3-venv` |
+| 4 | **Git** | Ver la evolución commit por commit | `git --version` |
+| 5 | **curl** | Mostrar la API "a pelo" en la terminal | `curl --version` |
+| 6 | **Telegram (app móvil)** | Hablar con el bot | — |
+| 7 | **@BotFather** (en Telegram) | Crear el bot y obtener el token | — |
+| 8 | **Dependencias del bot** (`requirements.txt`) | `python-telegram-bot`, `python-dotenv`, `httpx` | `pip install -r requirements.txt` |
+
+### 0.2 Instalación en Linux (Ubuntu/Debian)
+
+Todo en un solo bloque:
+
+```bash
+# 1) Paquetes del sistema (necesita sudo, solo la primera vez)
+sudo apt update
+sudo apt install -y python3 python3-pip python3-venv git curl
+
+# 2) Verificar versiones
+python3 --version     # debe ser 3.10 o superior
+pip3 --version
+git --version
+curl --version
+```
+
+### 0.3 Instalación en Windows (PowerShell)
+
+```powershell
+# 1) Marcar la ejecución de scripts (una sola vez, si hace falta)
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
+# 2) Instalar con winget (o descargar desde python.org / git-scm.com)
+winget install Python.Python.3.12
+winget install Git.Git
+```
+
+> En Windows no hace falta instalar `curl` (ya viene incluido desde
+> Windows 10 1803). Verificá con `curl --version`.
+
+### 0.4 Instalación en macOS
+
+```bash
+# Python 3 (vía Homebrew). git y curl ya vienen de fábrica.
+brew install python
+python3 --version
+```
+
+### 0.5 Entorno virtual (OBLIGATORIO)
+
+Un entorno virtual aísla las dependencias del bot del sistema, para
+que `pip install` nunca pida permisos de administrador y para poder
+**borrarlo y recrearlo** sin romper nada.
+
+```bash
+cd pokebot
+
+# Crear
+python3 -m venv .venv
+
+# Activar
+# Linux / macOS:
+source .venv/bin/activate
+# Windows (PowerShell):
+.venv\Scripts\Activate.ps1
+# Windows (cmd):
+.venv\Scripts\activate.bat
+```
+
+Verificar que se activó (debe decir `(.venv)` al principio de la línea):
+
+```bash
+which python          # Linux/macOS -> .../pokebot/.venv/bin/python
+# Windows: where python
+```
+
+> 💡 **Si `python3 -m venv .venv` falla** con
+> `No module named 'venv'` en Debian/Ubuntu:
+> ```bash
+> sudo apt install python3-venv
+> ```
+
+### 0.6 Librerías de Python
+
+Las **tres librerías** que usa el bot ya están declaradas en
+`requirements.txt`, así que se instalan **todas juntas con un solo
+comando**:
+
+```bash
+# Con el venv activado:
+pip install -r requirements.txt
+```
+
+Eso es lo que hay que ejecutar **antes de la clase**. Durante la
+exposición no se instala nada: el entorno ya está listo y solo se
+muestra el `requirements.txt` que va creciendo commit por commit.
+
+Qué hay dentro de `requirements.txt` y para qué sirve cada cosa:
+
+```txt
+python-telegram-bot>=21.0   # framework del bot (v0)
+python-dotenv>=1.0.1        # leer el .env con el token (v1)
+httpx>=0.27.0               # cliente HTTP asíncrono (v2)
+```
+
+Verificar que quedaron instaladas:
+
+```bash
+pip list | grep -E "telegram|dotenv|httpx"
+python -c "import telegram, dotenv, httpx; print('✅ deps OK')"
+```
+
+### 0.7 Token del bot en `@BotFather`
+
+Esto **no** es un comando: es un paso manual que debe estar hecho
+**antes** de la clase.
+
+1. En Telegram, buscar **@BotFather** → `/newbot`.
+2. Nombre visible (ej: `PokeBot UdeA`) y `@username` único (ej:
+   `udea_pokebot_expo_2026`).
+3. `@BotFather` devuelve un token tipo `123456789:AAHadnii_mvisT0...`.
+4. Copiarlo en el archivo `.env`:
+
+   ```bash
+   cp .env.example .env
+   nano .env          # o: code .env   (VS Code)
+   ```
+
+   ```env
+   TELEGRAM_TOKEN=123456789:AAHadnii_mvisT0UqiE-qgi90HYgBrsKd4Q
+   POKEAPI_BASE=https://pokeapi.co/api/v2
+   ```
+
+> 🔒 El token da **control total** del bot. Nunca se pega en chats, en
+> capturas de pantalla ni se sube al repo (`.env` está en
+> `.gitignore`). Si se filtra: `@BotFather` → `/revoke`.
+
+### 0.8 Prueba de humo (SMOKE TEST)
+
+Este bloque **debe correr completo sin errores** antes de la
+exposición. Pégalo en la terminal con el venv activado:
+
+```bash
+# 1) Las dependencias están
+python -c "import telegram, dotenv, httpx; print('✅ 1. deps OK')"
+
+# 2) El .env existe y el token está cargado (no imprime el token)
+python -c "from dotenv import load_dotenv; import os; load_dotenv(); \
+assert os.getenv('TELEGRAM_TOKEN'), 'Falta TELEGRAM_TOKEN'; print('✅ 2. .env OK')"
+
+# 3) La API responde
+curl -s https://pokeapi.co/api/v2/pokemon/pikachu | head -c 80
+echo ""
+# esperado: {"id":25,"name":"pikachu","base_experience":112,"height":4,...
+
+# 4) El bot arranca y se conecta a Telegram
+python -m bot
+# esperado en la terminal:
+#   INFO telegram.ext.Application: Application started
+#   INFO telegram.ext.Application: Bot poked!
+# (Ctrl+C para detenerlo)
+```
+
+> 💡 **Si el paso 4 no muestra nada**: `python-telegram-bot` v22+ no
+> imprime logs a la terminal por defecto. No es un error — el bot
+> funciona igual. Para verlos, forzá el logging:
+> ```bash
+> python -u -c "
+> import logging; logging.basicConfig(level=logging.INFO)
+> from bot.__main__ import main; main()"
+> ```
+> Con eso vas a ver `Application started` y las peticiones `getMe` /
+> `getUpdates` hacia `api.telegram.org`.
+
+Si los 4 puntos pasan, la clase va a fluir. Si alguno falla, se
+resuelve **antes** de exponer.
+
+### 0.9 Errores frecuentes (con su solución)
+
+| Error en terminal | Causa | Solución |
+|---|---|---|
+| `python3: command not found` | Python no instalado | `sudo apt install python3` |
+| `No module named 'venv'` | Falta el módulo venv | `sudo apt install python3-venv` |
+| `pip install` → *Permission denied* | venv **no** activado | `source .venv/bin/activate` y reintentar |
+| `ModuleNotFoundError: No module named 'telegram'` | Deps no instaladas o venv no activado | `pip install -r requirements.txt` con el venv activo |
+| `RuntimeError: Falta TELEGRAM_TOKEN en el .env` | `.env` sin el token real | Repetir 0.7 |
+| `Invalid token` | Token mal copiado (espacios/quotes) | Volver a copiarlo desde @BotFather |
+| `No such file or directory: '.env'` | Estás en otra carpeta | `cd pokebot` |
+| `ConnectionError` / `Timeout` al pedir datos | Sin internet o PokeAPI caída | Revisar red; el bot ya maneja ese error (v7) |
+| `curl: command not found` | curl no instalado | `sudo apt install curl` |
+
+### 0.10 Plan B (si algo falla en vivo)
+
+Si en la clase el entorno se rompe, hay que tener a mano:
+
+- **Un `.env` ya lleno** en un USB / en un chat seguro de respaldo.
+- **Un segundo bot** de prueba (@BotFather → `/newbot`) por si hay que
+  revocar el token en vivo.
+- **Modo "sin internet"**: el plan sirve igual mostrando el JSON
+  guardado en local (`curl ... > pikachu.json`) para explicar la
+  estructura de la respuesta.
+- **Capturas de pantalla** del bot funcionando, por si Telegram
+  (`api.telegram.org`) está bloqueado en el aula.
 
 ---
 
@@ -69,6 +377,14 @@ python-telegram-bot>=21.0
 
 Iremos agregando dependencias **en los commits que las introducen**
 (esto es parte del aprendizaje).
+
+> La **instalación completa** de todas estas herramientas está en la
+> [sección 0](#0-herramientas-y-librerías-previas-a-instalar), que es lo
+> que hay que dejar listo **antes** de la clase.
+
+> La **instalación completa** de todas estas herramientas está en la
+> [sección 0](#0-herramientas-y-librerías-previas-a-instalar), que es lo
+> que hay que dejar listo **antes** de la clase.
 
 ---
 
